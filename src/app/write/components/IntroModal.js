@@ -9,7 +9,11 @@ import { X, ShieldAlert } from "lucide-react";
 
 // Zod 유효성 검사 스키마 정의
 const introSchema = z.object({
-  bio: z.string().max(500, "자기소개는 최대 500자까지 입력 가능합니다.").optional().or(z.literal("")),
+  bio: z
+    .string()
+    .max(500, "자기소개는 최대 500자까지 입력 가능합니다.")
+    .optional()
+    .or(z.literal("")),
 });
 
 export default function IntroModal({ isOpen, onClose, onSave, initialData }) {
@@ -69,7 +73,9 @@ export default function IntroModal({ isOpen, onClose, onSave, initialData }) {
       >
         {/* 모달 헤더 */}
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-          <h4 className="text-sm font-bold text-slate-900 font-sans">자기소개 수정</h4>
+          <h4 className="text-sm font-bold text-slate-900 font-sans">
+            자기소개 수정
+          </h4>
           <button
             type="button"
             onClick={handleClose}
@@ -90,14 +96,16 @@ export default function IntroModal({ isOpen, onClose, onSave, initialData }) {
 
           <div>
             <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block mb-1">
-              한 줄 소개 (자기소개)
+              자기소개
             </label>
             <textarea
               placeholder="본인의 강점이나 개발자로서 지향하는 가치 등을 3~5줄 내외로 간결하게 표현해 보세요."
               {...register("bio")}
               rows={5}
               className={`w-full bg-white border rounded-lg p-2.5 text-xs focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder-slate-400 font-sans leading-normal resize-none ${
-                errors.bio ? "border-red-500 focus:ring-red-200" : "border-slate-200"
+                errors.bio
+                  ? "border-red-500 focus:ring-red-200"
+                  : "border-slate-200"
               }`}
               autoFocus
             />
