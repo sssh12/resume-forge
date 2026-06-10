@@ -10,19 +10,24 @@ import { X, Calendar, ShieldAlert } from "lucide-react";
 
 // Zod 유효성 검사 스키마 정의
 const profileSchema = z.object({
-  name: z.string().min(1, "이름을 입력해 주세요."),
-  birth_date: z.string().min(1, "생년월일을 선택해 주세요."),
+  name: z.string().trim().min(1, "이름을 입력해 주세요."),
+  birth_date: z.string().trim().min(1, "생년월일을 선택해 주세요."),
   email: z
     .string()
+    .trim()
     .min(1, "이메일을 입력해 주세요.")
     .email("올바른 이메일 주소 형식이 아닙니다."),
-  phone: z
-    .string()
-    .min(1, "전화번호를 입력해 주세요.")
-    .regex(
-      /^010-?\d{3,4}-?\d{4}$/,
-      "올바른 전화번호 형식(예: 010-1234-5678 또는 01012345678)이 아닙니다.",
-    ),
+  phone: z.preprocess(
+    (value) =>
+      typeof value === "string" ? value.replace(/[\s-]/g, "") : value,
+    z
+      .string()
+      .min(1, "전화번호를 입력해 주세요.")
+      .regex(
+        /^010\d{7,8}$/,
+        "올바른 전화번호 형식(예: 010-1234-5678 또는 01012345678)이 아닙니다.",
+      ),
+  ),
   github_url: z.string().optional().or(z.literal("")),
   blog_url: z.string().optional().or(z.literal("")),
   portfolio_url: z.string().optional().or(z.literal("")),
