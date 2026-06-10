@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X, Calendar, ShieldAlert } from "lucide-react";
 
-// Zod 유효성 검사 스키마 정의
 const profileSchema = z.object({
   name: z.string().trim().min(1, "이름을 입력해 주세요."),
   birth_date: z.string().trim().min(1, "생년월일을 선택해 주세요."),
@@ -18,8 +17,7 @@ const profileSchema = z.object({
     .min(1, "이메일을 입력해 주세요.")
     .email("올바른 이메일 주소 형식이 아닙니다."),
   phone: z.preprocess(
-    (value) =>
-      typeof value === "string" ? value.replace(/[\s-]/g, "") : value,
+    (value) => (typeof value === "string" ? value.replace(/\D/g, "") : value),
     z
       .string()
       .min(1, "전화번호를 입력해 주세요.")
@@ -37,13 +35,15 @@ export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
   const [submitError, setSubmitError] = useState(null);
   const dateInputRef = useRef(null);
 
-  // set-state-in-effect 에러를 해결하기 위해 렌더링 중 상태 조정 기법을 사용합니다.
-  // 모달의 열림 상태(isOpen)가 변경될 때 submitError를 안전하게 초기화합니다.
-  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
-  if (isOpen !== prevIsOpen) {
-    setPrevIsOpen(isOpen);
-    setSubmitError(null);
-  }
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        setSubmitError(null);
+      }, 0);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   const {
     register,
@@ -52,6 +52,8 @@ export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(profileSchema),
+    criteriaMode: "firstError",
+    shouldFocusError: true,
     mode: "onChange",
     defaultValues: {
       name: "",
@@ -126,6 +128,7 @@ export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
       className="fixed inset-0 z-50 bg-slate-900/45 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in"
     >
       <form
+        noValidate
         onSubmit={handleSubmit(onSubmit)}
         onClick={(e) => e.stopPropagation()}
         className="bg-white rounded-2xl border border-slate-100 shadow-xl max-w-lg w-full overflow-hidden animate-zoom-in"
@@ -210,7 +213,9 @@ export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
                 이메일 <span className="text-red-500 font-extrabold">*</span>
               </label>
               <Input
-                type="email"
+                type="text"
+                inputMode="email"
+                autoComplete="email"
                 placeholder="example@email.com"
                 {...register("email")}
                 className={`bg-white h-9 border-slate-200 text-xs focus:ring-primary/20 ${
@@ -230,6 +235,8 @@ export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
               </label>
               <Input
                 placeholder="01012345678"
+                inputMode="tel"
+                autoComplete="tel"
                 {...register("phone")}
                 className={`bg-white h-9 border-slate-200 text-xs focus:ring-primary/20 ${
                   errors.phone ? "border-red-500 focus:ring-red-200" : ""
