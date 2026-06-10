@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X, ShieldAlert } from "lucide-react";
+import { X, ShieldAlert, Calendar } from "lucide-react";
 
 // Zod 유효성 검사 스키마 정의
 const experienceSchema = z.object({
@@ -25,6 +25,18 @@ export default function ExperienceModal({
   initialData,
 }) {
   const [submitError, setSubmitError] = useState(null);
+  const startDateInputRef = React.useRef(null);
+  const endDateInputRef = React.useRef(null);
+
+  const handleCalendarClick = (ref) => {
+    try {
+      if (ref.current) {
+        ref.current.showPicker();
+      }
+    } catch (e) {
+      ref.current?.focus();
+    }
+  };
 
   const {
     register,
@@ -152,28 +164,56 @@ export default function ExperienceModal({
               <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block mb-1">
                 시작 연월 <span className="text-red-500 font-extrabold">*</span>
               </label>
-              <Input
-                type="date"
-                {...register("start_date")}
-                className={`bg-white h-9 border-slate-200 text-xs focus:ring-primary/20 ${
-                  errors.start_date ? "border-red-500 focus:ring-red-200" : ""
-                }`}
-              />
-              {errors.start_date && (
-                <p className="text-[10px] text-red-500 font-bold mt-1">
-                  {errors.start_date.message}
-                </p>
-              )}
+              <div className="relative flex flex-col justify-center">
+                <div className="relative flex items-center">
+                  <Input
+                    ref={(e) => {
+                      register("start_date").ref(e);
+                      startDateInputRef.current = e;
+                    }}
+                    type="date"
+                    name="start_date"
+                    onChange={register("start_date").onChange}
+                    onBlur={register("start_date").onBlur}
+                    className={`bg-white h-9 border-slate-200 text-xs focus:ring-primary/20 pr-9 w-full [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:cursor-pointer ${
+                      errors.start_date ? "border-red-500 focus:ring-red-200" : ""
+                    }`}
+                  />
+                  <Calendar
+                    onClick={() => handleCalendarClick(startDateInputRef)}
+                    className="absolute right-2.5 h-4.5 w-4.5 text-slate-400 hover:text-primary cursor-pointer hover:scale-105 active:scale-95 transition-all duration-150"
+                  />
+                </div>
+                {errors.start_date && (
+                  <p className="text-[10px] text-red-500 font-bold mt-1">
+                    {errors.start_date.message}
+                  </p>
+                )}
+              </div>
             </div>
             <div>
               <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block mb-1">
                 종료 연월
               </label>
-              <Input
-                type="date"
-                {...register("end_date")}
-                className="bg-white h-9 border-slate-200 text-xs focus:ring-primary/20"
-              />
+              <div className="relative flex flex-col justify-center">
+                <div className="relative flex items-center">
+                  <Input
+                    ref={(e) => {
+                      register("end_date").ref(e);
+                      endDateInputRef.current = e;
+                    }}
+                    type="date"
+                    name="end_date"
+                    onChange={register("end_date").onChange}
+                    onBlur={register("end_date").onBlur}
+                    className="bg-white h-9 border-slate-200 text-xs focus:ring-primary/20 pr-9 w-full [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                  />
+                  <Calendar
+                    onClick={() => handleCalendarClick(endDateInputRef)}
+                    className="absolute right-2.5 h-4.5 w-4.5 text-slate-400 hover:text-primary cursor-pointer hover:scale-105 active:scale-95 transition-all duration-150"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
