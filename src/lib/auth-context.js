@@ -67,14 +67,26 @@ export function AuthProvider({ children }) {
     return data;
   };
 
+  // 소셜 로그인 (OAuth) 함수
+  const signInWithOAuth = async (provider) => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`, // 로그인 후 리다이렉트될 경로
+      },
+    });
+    if (error) throw error;
+    return data;
+  };
+
   // 로그아웃 함수
   const signOut = async () => {
-    const { error } = await supabase.supabase || await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
     if (error) throw error;
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signInWithOAuth, signOut }}>
       {children}
     </AuthContext.Provider>
   );
