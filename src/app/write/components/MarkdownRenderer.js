@@ -50,7 +50,7 @@ export default function MarkdownRenderer({ content }) {
             {isBullet && (
               <span className="h-1.5 w-1.5 rounded-full bg-slate-300 mt-2 shrink-0" />
             )}
-            <span className="flex-1">{parseInlineBold(cleanLine)}</span>
+            <div className="flex-1">{parseInlineBold(cleanLine)}</div>
           </li>
         );
       })}
