@@ -102,6 +102,7 @@ export default function useResumeData(resumeId) {
   const handleSaveProfile = async (form) => {
     try {
       const payload = {
+        user_id: resume?.user_id,
         name: form.name || null,
         email: form.email || null,
         phone: form.phone || null,
@@ -136,6 +137,7 @@ export default function useResumeData(resumeId) {
   const handleSaveIntro = async (form) => {
     try {
       const payload = {
+        user_id: resume?.user_id,
         bio: form.bio || null,
         skills: form.skills || null,
         updated_at: new Date().toISOString()

@@ -857,6 +857,7 @@ export default function WritePage({ params }) {
           const success = await handleSaveProfile(form);
           if (success) {
             setIsProfileModalOpen(false);
+            await refetchDetails();
             router.refresh();
           }
         }}
@@ -874,6 +875,7 @@ export default function WritePage({ params }) {
           });
           if (success) {
             setIsIntroModalOpen(false);
+            await refetchDetails();
             router.refresh();
           }
         }}
@@ -891,6 +893,7 @@ export default function WritePage({ params }) {
           });
           if (success) {
             setIsSkillsModalOpen(false);
+            await refetchDetails();
             router.refresh();
           }
         }}
