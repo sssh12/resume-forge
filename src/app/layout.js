@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "ResumeForge - AI 기반 이력서 빌더",
+  title: "ResumeForge",
   description:
     "의식의 흐름 메모를 STAR 구조의 정량화된 성과 이력서로 자동 변환해 주는 똑똑한 빌더",
 };
