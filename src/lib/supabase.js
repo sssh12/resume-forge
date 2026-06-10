@@ -17,4 +17,12 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true, // 토큰 만료 전 자동 갱신
     detectSessionInUrl: true, // OAuth 리다이렉트 시 URL의 해시/쿼리 파라미터에서 세션 자동 추출
   },
+  global: {
+    fetch: (url, options) => {
+      return fetch(url, {
+        ...options,
+        cache: "no-store", // Next.js의 데이터 캐싱 방지
+      });
+    },
+  },
 });
