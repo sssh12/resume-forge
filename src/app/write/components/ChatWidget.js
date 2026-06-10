@@ -366,7 +366,7 @@ export default function ChatWidget({
             <div className="flex justify-start">
               <div className="bg-white text-slate-500 border border-slate-200/60 rounded-2xl rounded-bl-xs px-4 py-3 text-sm flex items-center gap-2 shadow-xs">
                 <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
-                멘토가 메모 분석 중...
+                내용 분석 중...
               </div>
             </div>
           )}

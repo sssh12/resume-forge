@@ -2,13 +2,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Plus,
-  Trash2,
-  Calendar,
-  GraduationCap,
-  Edit2
-} from "lucide-react";
+import { Plus, Trash2, Calendar, GraduationCap, Edit2 } from "lucide-react";
 import EducationModal from "./EducationModal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 
@@ -16,7 +10,7 @@ export default function EducationSection({
   educations,
   onSaveEdu,
   onDeleteEdu,
-  isReadOnly = false
+  isReadOnly = false,
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editTarget, setEditTarget] = useState(null);
@@ -70,7 +64,9 @@ export default function EducationSection({
             >
               <div className="space-y-1.5 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-extrabold text-sm text-slate-900">{edu.school_name}</span>
+                  <span className="font-extrabold text-sm text-slate-900">
+                    {edu.school_name}
+                  </span>
                   {edu.major && (
                     <span className="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
                       {edu.major}
@@ -78,7 +74,7 @@ export default function EducationSection({
                   )}
                   {edu.gpa && (
                     <span className="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
-                      학점: {edu.gpa}
+                      GPA {edu.gpa}
                     </span>
                   )}
                 </div>
@@ -87,14 +83,14 @@ export default function EducationSection({
                   {edu.start_date
                     ? new Date(edu.start_date).toLocaleDateString("ko-KR", {
                         year: "numeric",
-                        month: "short"
+                        month: "short",
                       })
                     : "미상"}
                   <span>~</span>
                   {edu.end_date
                     ? new Date(edu.end_date).toLocaleDateString("ko-KR", {
                         year: "numeric",
-                        month: "short"
+                        month: "short",
                       })
                     : "재학 중"}
                 </div>
