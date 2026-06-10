@@ -175,13 +175,13 @@ export default function EducationModal({
                     name="start_date"
                     onChange={register("start_date").onChange}
                     onBlur={register("start_date").onBlur}
-                    className={`bg-white h-9 border-slate-200 text-xs focus:ring-primary/20 pr-9 w-full [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:cursor-pointer ${
+                    className={`bg-white h-9 border-slate-200 text-xs focus:ring-primary/20 pr-9 w-full pointer-events-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:pointer-events-none ${
                       errors.start_date ? "border-red-500 focus:ring-red-200" : ""
                     }`}
                   />
                   <Calendar
                     onClick={() => handleCalendarClick(startDateInputRef)}
-                    className="absolute right-2.5 h-4.5 w-4.5 text-slate-400 hover:text-primary cursor-pointer hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="absolute right-2.5 h-4.5 w-4.5 text-slate-400 hover:text-primary cursor-pointer hover:scale-105 active:scale-95 transition-all duration-150 pointer-events-auto z-10"
                   />
                 </div>
                 {errors.start_date && (
@@ -206,11 +206,11 @@ export default function EducationModal({
                     name="end_date"
                     onChange={register("end_date").onChange}
                     onBlur={register("end_date").onBlur}
-                    className="bg-white h-9 border-slate-200 text-xs focus:ring-primary/20 pr-9 w-full [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                    className="bg-white h-9 border-slate-200 text-xs focus:ring-primary/20 pr-9 w-full pointer-events-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:pointer-events-none"
                   />
                   <Calendar
                     onClick={() => handleCalendarClick(endDateInputRef)}
-                    className="absolute right-2.5 h-4.5 w-4.5 text-slate-400 hover:text-primary cursor-pointer hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="absolute right-2.5 h-4.5 w-4.5 text-slate-400 hover:text-primary cursor-pointer hover:scale-105 active:scale-95 transition-all duration-150 pointer-events-auto z-10"
                   />
                 </div>
               </div>
