@@ -121,7 +121,13 @@ export default function useResumeData(resumeId) {
       setResume((prev) => ({ ...prev, ...payload }));
       return true;
     } catch (error) {
-      console.error("프로필 저장 실패:", error);
+      console.error("프로필 저장 실패 상세 에러:", {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+        errorObject: error
+      });
       throw new Error(error.message || "인적사항을 저장하지 못했습니다.");
     }
   };
@@ -144,7 +150,13 @@ export default function useResumeData(resumeId) {
       setResume((prev) => ({ ...prev, ...payload }));
       return true;
     } catch (error) {
-      console.error("자기소개/기술스택 저장 실패:", error);
+      console.error("자기소개/기술스택 저장 실패 상세 에러:", {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+        errorObject: error
+      });
       throw new Error(error.message || "자기소개 및 기술 스택 정보를 저장하지 못했습니다.");
     }
   };

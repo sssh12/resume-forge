@@ -19,10 +19,10 @@ const profileSchema = z.object({
   phone: z
     .string()
     .min(1, "전화번호를 입력해 주세요.")
-    .regex(/^010\d{8}$/, "올바른 전화번호 형식(예: 01012345678)이 아닙니다."),
-  github_url: z.string().optional().or(z.literal("")),
-  blog_url: z.string().optional().or(z.literal("")),
-  portfolio_url: z.string().optional().or(z.literal("")),
+    .regex(/^010-?\d{3,4}-?\d{4}$/, "올바른 전화번호 형식(예: 010-1234-5678)이 아닙니다."),
+  github_url: z.string().optional().nullable().or(z.literal("")),
+  blog_url: z.string().optional().nullable().or(z.literal("")),
+  portfolio_url: z.string().optional().nullable().or(z.literal("")),
 });
 
 export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {

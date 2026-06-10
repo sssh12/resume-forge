@@ -161,26 +161,37 @@ export default function WritePage({ params }) {
           el.style.setProperty("margin-top", "0px", "important");
         }
 
-        // 텍스트 유실 방지용 span 감싸기
-        if (el.tagName !== "SCRIPT" && el.tagName !== "STYLE") {
-          const childNodes = Array.from(el.childNodes);
-          childNodes.forEach((node) => {
-            if (
-              node.nodeType === Node.TEXT_NODE &&
-              node.nodeValue.trim().length > 0
-            ) {
-              const span = document.createElement("span");
-              span.textContent = node.nodeValue;
-              span.style.display = "inline"; // baseline 흔들림 방지
-              el.replaceChild(span, node);
-            }
-          });
+        // html2canvas 줄바꿈 텍스트 겹침 버그 방지용 line-height 및 텍스트 룰 강제화
+        if (["SPAN", "P", "LI", "STRONG", "A", "H2", "H3", "DIV"].includes(el.tagName)) {
+          el.style.setProperty("line-height", "1.6", "important");
+          el.style.setProperty("word-break", "break-all", "important");
+          el.style.setProperty("word-wrap", "break-word", "important");
+          el.style.setProperty("white-space", "normal", "important");
         }
 
-        // 1인 flex 요소 display 변환
+        // flex 레이아웃을 html2canvas가 오동작하여 겹치는 버그 수정 (블록 및 float 레이아웃으로 플래티닝)
         const display = window.getComputedStyle(el).display;
-        if (display.includes("flex") && el.children.length <= 1) {
-          el.style.setProperty("display", "block", "important");
+        if (display.includes("flex")) {
+          if (el.children.length <= 1) {
+            el.style.setProperty("display", "block", "important");
+          } else if (el.tagName === "LI" || el.classList.contains("flex") || el.tagName === "DIV") {
+            el.style.setProperty("display", "block", "important");
+            el.style.setProperty("width", "100%", "important");
+            el.style.setProperty("clear", "both", "important");
+            
+            Array.from(el.children).forEach((child, idx) => {
+              if (idx === 0 && (child.classList.contains("shrink-0") || child.offsetWidth < 30 || child.className.includes("w-1.5"))) {
+                child.style.setProperty("display", "block", "important");
+                child.style.setProperty("float", "left", "important");
+                child.style.setProperty("width", "12px", "important");
+                child.style.setProperty("margin-top", "6px", "important");
+              } else {
+                child.style.setProperty("display", "block", "important");
+                child.style.setProperty("margin-left", "18px", "important");
+                child.style.setProperty("width", "calc(100% - 18px)", "important");
+              }
+            });
+          }
         }
       });
 
@@ -287,6 +298,8 @@ export default function WritePage({ params }) {
           logging: false,
           backgroundColor: "#ffffff",
           width: 794,
+          windowWidth: 794, // 가상 뷰포트 너비 고정
+          windowHeight: Math.max(1123, clone.offsetHeight + 150), // 가상 뷰포트 높이 고정 (최소 A4 1페이지 크기 확보)
           scrollX: 0,
           scrollY: 0,
           x: 0,
