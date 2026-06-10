@@ -645,7 +645,7 @@ export default function WritePage({ params }) {
                     <h2
                       className={`text-3xl font-black tracking-tight truncate ${resume.name ? "text-slate-900" : "text-slate-300"}`}
                     >
-                      {resume.name || "이름을 입력해 주세요"}
+                      {resume.name || "이름을 등록해 주세요"}
                     </h2>
 
                     {/* 연락처 및 링크 정보 */}
