@@ -39,7 +39,8 @@ export default function SkillsModal({ isOpen, onClose, onSave, initialData }) {
         skills: initialData?.skills || "",
       });
     }
-  }, [initialData, isOpen, reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

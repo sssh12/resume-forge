@@ -64,7 +64,8 @@ export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
         portfolio_url: initialData?.portfolio_url || "",
       });
     }
-  }, [initialData, isOpen, reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

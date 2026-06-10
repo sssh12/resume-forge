@@ -38,7 +38,8 @@ export default function IntroModal({ isOpen, onClose, onSave, initialData }) {
         bio: initialData?.bio || "",
       });
     }
-  }, [initialData, isOpen, reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
