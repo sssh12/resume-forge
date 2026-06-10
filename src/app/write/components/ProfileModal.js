@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -19,7 +19,10 @@ const profileSchema = z.object({
   phone: z
     .string()
     .min(1, "전화번호를 입력해 주세요.")
-    .regex(/^010\d{8}$/, "올바른 전화번호 형식(예: 01012345678)이 아닙니다."),
+    .regex(
+      /^010-?\d{3,4}-?\d{4}$/,
+      "올바른 전화번호 형식(예: 010-1234-5678 또는 01012345678)이 아닙니다.",
+    ),
   github_url: z.string().optional().or(z.literal("")),
   blog_url: z.string().optional().or(z.literal("")),
   portfolio_url: z.string().optional().or(z.literal("")),
@@ -27,7 +30,15 @@ const profileSchema = z.object({
 
 export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
   const [submitError, setSubmitError] = useState(null);
-  const dateInputRef = React.useRef(null);
+  const dateInputRef = useRef(null);
+
+  // set-state-in-effect 에러를 해결하기 위해 렌더링 중 상태 조정 기법을 사용합니다.
+  // 모달의 열림 상태(isOpen)가 변경될 때 submitError를 안전하게 초기화합니다.
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
+    setSubmitError(null);
+  }
 
   const {
     register,
@@ -49,11 +60,9 @@ export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
   });
 
   // 모달 활성화 및 초기 데이터 주입
+  // react-hooks/exhaustive-deps 규칙을 준수하기 위해 내부에서 참조하는 모든 값을 의존성 배열에 추가했습니다.
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => {
-        setSubmitError(null);
-      }, 0);
       reset({
         name: initialData?.name || "",
         email: initialData?.email || "",
@@ -64,10 +73,21 @@ export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
         portfolio_url: initialData?.portfolio_url || "",
       });
     }
-  }, [initialData, isOpen, reset]);
+  }, [
+    isOpen,
+    reset,
+    initialData?.name,
+    initialData?.email,
+    initialData?.phone,
+    initialData?.birth_date,
+    initialData?.github_url,
+    initialData?.blog_url,
+    initialData?.portfolio_url,
+  ]);
 
   if (!isOpen) return null;
 
+  // 캘린더 아이콘 클릭 시 브라우저 날짜 선택기 실행
   const handleCalendarClick = () => {
     try {
       if (dateInputRef.current) {
@@ -91,6 +111,9 @@ export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
       setSubmitError(err.message || "인적사항 정보를 저장하지 못했습니다.");
     }
   };
+
+  // birth_date register의 ref와 로컬 ref를 병합하는 헬퍼 함수
+  const { ref: birthDateRef, ...birthDateRegister } = register("birth_date");
 
   return (
     <div
@@ -144,6 +167,7 @@ export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
                 </p>
               )}
             </div>
+
             <div>
               <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block mb-1">
                 생년월일 <span className="text-red-500 font-extrabold">*</span>
@@ -151,16 +175,16 @@ export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
               <div className="relative flex flex-col justify-center">
                 <div className="relative flex items-center">
                   <Input
-                    ref={(e) => {
-                      register("birth_date").ref(e);
-                      dateInputRef.current = e;
-                    }}
                     type="date"
-                    name="birth_date"
-                    onChange={register("birth_date").onChange}
-                    onBlur={register("birth_date").onBlur}
+                    {...birthDateRegister}
+                    ref={(e) => {
+                      birthDateRef(e); // react-hook-form에 ref 주입
+                      dateInputRef.current = e; // 로컬 ref에도 인스턴스 할당
+                    }}
                     className={`bg-white h-9 border-slate-200 text-xs focus:ring-primary/20 pr-9 w-full [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:cursor-pointer ${
-                      errors.birth_date ? "border-red-500 focus:ring-red-200" : ""
+                      errors.birth_date
+                        ? "border-red-500 focus:ring-red-200"
+                        : ""
                     }`}
                   />
                   <Calendar
@@ -175,6 +199,7 @@ export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
                 )}
               </div>
             </div>
+
             <div>
               <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block mb-1">
                 이메일 <span className="text-red-500 font-extrabold">*</span>
@@ -193,6 +218,7 @@ export default function ProfileModal({ isOpen, onClose, onSave, initialData }) {
                 </p>
               )}
             </div>
+
             <div>
               <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block mb-1">
                 전화번호 <span className="text-red-500 font-extrabold">*</span>

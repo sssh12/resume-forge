@@ -89,7 +89,7 @@ export default function WritePage({ params }) {
       if (parent.style.cssText) {
         wrapper.style.cssText = parent.style.cssText;
       }
-      
+
       // 래퍼 스타일 및 위치 설정
       wrapper.style.position = "fixed";
       wrapper.style.left = "0";
@@ -105,7 +105,7 @@ export default function WritePage({ params }) {
       // 클론 생성
       const clone = element.cloneNode(true);
       clone.id = "resume-pdf-clone";
-      
+
       // 클론 스타일 설정
       clone.style.position = "relative";
       clone.style.left = "0";
@@ -119,14 +119,17 @@ export default function WritePage({ params }) {
       clone.style.border = "1px solid #ffffff"; // 마진 병합 방지용 테두리
       clone.style.borderRadius = "0px";
       clone.style.boxShadow = "none";
-      clone.style.fontFamily = "'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif";
-      
+      clone.style.fontFamily =
+        "'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif";
+
       // Flex 레이아웃 차단
       clone.style.setProperty("display", "block", "important");
       clone.style.setProperty("flex", "none", "important");
 
       // 불필요한 UI 제거
-      const controls = clone.querySelectorAll("button, .print\\:hidden, .opacity-0, a[onClick]");
+      const controls = clone.querySelectorAll(
+        "button, .print\\:hidden, .opacity-0, a[onClick]",
+      );
       controls.forEach((el) => el.remove());
 
       // 호버 요소 제거
@@ -142,7 +145,7 @@ export default function WritePage({ params }) {
       allElements.forEach((el) => {
         // Tailwind 자간 제거
         const classesToRemove = Array.from(el.classList).filter((cls) =>
-          cls.startsWith("tracking-")
+          cls.startsWith("tracking-"),
         );
         classesToRemove.forEach((cls) => el.classList.remove(cls));
 
@@ -162,7 +165,10 @@ export default function WritePage({ params }) {
         if (el.tagName !== "SCRIPT" && el.tagName !== "STYLE") {
           const childNodes = Array.from(el.childNodes);
           childNodes.forEach((node) => {
-            if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim().length > 0) {
+            if (
+              node.nodeType === Node.TEXT_NODE &&
+              node.nodeValue.trim().length > 0
+            ) {
               const span = document.createElement("span");
               span.textContent = node.nodeValue;
               span.style.display = "inline"; // baseline 흔들림 방지
@@ -190,7 +196,11 @@ export default function WritePage({ params }) {
         const getElementRelativeTop = (el, container) => {
           let top = 0;
           let current = el;
-          while (current && current !== container && current !== document.body) {
+          while (
+            current &&
+            current !== container &&
+            current !== document.body
+          ) {
             top += current.offsetTop || 0;
             current = current.offsetParent;
           }
@@ -211,10 +221,15 @@ export default function WritePage({ params }) {
         let blocks = Array.from(clone.querySelectorAll(".pdf-block"));
 
         // 중첩 제외 필터링
-        blocks = blocks.filter((b) => !blocks.some((o) => o !== b && o.contains(b)));
+        blocks = blocks.filter(
+          (b) => !blocks.some((o) => o !== b && o.contains(b)),
+        );
 
         // 좌표 정렬
-        blocks.sort((a, b) => getElementRelativeTop(a, clone) - getElementRelativeTop(b, clone));
+        blocks.sort(
+          (a, b) =>
+            getElementRelativeTop(a, clone) - getElementRelativeTop(b, clone),
+        );
 
         let accumulatedSpacerHeight = 0;
 
@@ -229,7 +244,10 @@ export default function WritePage({ params }) {
           const nextPageBoundary = (pageIndex + 1) * a4PageHeight;
 
           // 경계선 걸침 확인
-          if (relativeTop < nextPageBoundary && relativeBottom > nextPageBoundary) {
+          if (
+            relativeTop < nextPageBoundary &&
+            relativeBottom > nextPageBoundary
+          ) {
             const neededSpacing = nextPageBoundary - relativeTop;
 
             const spacer = document.createElement("div");
@@ -240,7 +258,7 @@ export default function WritePage({ params }) {
             spacer.style.setProperty("display", "block", "important");
             spacer.style.setProperty("flex", "none", "important");
             spacer.className = "pdf-page-spacer";
-            
+
             block.parentNode.insertBefore(spacer, block);
             accumulatedSpacerHeight += neededSpacing;
           }
@@ -284,7 +302,7 @@ export default function WritePage({ params }) {
                 }
               });
             }
-          }
+          },
         });
 
         // jsPDF 초기화
@@ -327,7 +345,7 @@ export default function WritePage({ params }) {
             0,
             0,
             canvas.width,
-            srcHeight
+            srcHeight,
           );
 
           const pageImgData = pageCanvas.toDataURL("image/png");
@@ -347,7 +365,6 @@ export default function WritePage({ params }) {
       }
     };
 
-
     // 스크립트 순차 로드용 프로미스 헬퍼
     const loadScript = (src) => {
       return new Promise((resolve, reject) => {
@@ -365,8 +382,12 @@ export default function WritePage({ params }) {
 
     const run = async () => {
       try {
-        await loadScript("https://cdn.jsdelivr.net/npm/html2canvas-pro@latest/dist/html2canvas-pro.min.js");
-        await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+        await loadScript(
+          "https://cdn.jsdelivr.net/npm/html2canvas-pro@latest/dist/html2canvas-pro.min.js",
+        );
+        await loadScript(
+          "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
+        );
         await executeDownload();
       } catch (err) {
         console.error("PDF 엔진 로드 실패:", err);
@@ -376,11 +397,6 @@ export default function WritePage({ params }) {
 
     run();
   };
-
-
-
-
-
 
   // 1. 이력서 데이터 CRUD 상태 관리 훅 호출
   const {
@@ -614,7 +630,10 @@ export default function WritePage({ params }) {
         {/* RIGHT: 이력서 작성 및 실시간 미리보기 */}
         <section className="lg:col-span-7 flex flex-col h-[calc(100vh-125px)] sticky top-[90px]">
           <Card className="glass border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.03)] rounded-2xl overflow-hidden h-full flex flex-col print:bg-white print:border-none print:shadow-none print:rounded-none">
-            <div id="resume-pdf-content" className="flex-1 overflow-y-auto p-8 space-y-10">
+            <div
+              id="resume-pdf-content"
+              className="flex-1 overflow-y-auto p-8 space-y-10"
+            >
               {/* 이력서 프로필 및 인적사항 섹션 */}
               <div className="border-b-2 border-slate-900 pb-6 space-y-6">
                 {/* 1. 기본 인적사항 영역 (영역 클릭 시 수정 모달 오픈) */}
@@ -626,7 +645,7 @@ export default function WritePage({ params }) {
                     <h2
                       className={`text-3xl font-black tracking-tight truncate ${resume.name ? "text-slate-900" : "text-slate-300"}`}
                     >
-                      {resume.name || "이름을 등록해 주세요"}
+                      {resume.name || "이름을 입력해 주세요"}
                     </h2>
 
                     {/* 연락처 및 링크 정보 */}
