@@ -162,7 +162,11 @@ export default function WritePage({ params }) {
         }
 
         // html2canvas 줄바꿈 텍스트 겹침 버그 방지용 line-height 및 텍스트 룰 강제화
-        if (["SPAN", "P", "LI", "STRONG", "A", "H2", "H3", "DIV"].includes(el.tagName)) {
+        if (
+          ["SPAN", "P", "LI", "STRONG", "A", "H2", "H3", "DIV"].includes(
+            el.tagName,
+          )
+        ) {
           el.style.setProperty("line-height", "1.6", "important");
           el.style.setProperty("word-break", "break-all", "important");
           el.style.setProperty("word-wrap", "break-word", "important");
@@ -174,13 +178,22 @@ export default function WritePage({ params }) {
         if (display.includes("flex")) {
           if (el.children.length <= 1) {
             el.style.setProperty("display", "block", "important");
-          } else if (el.tagName === "LI" || el.classList.contains("flex") || el.tagName === "DIV") {
+          } else if (
+            el.tagName === "LI" ||
+            el.classList.contains("flex") ||
+            el.tagName === "DIV"
+          ) {
             el.style.setProperty("display", "block", "important");
             el.style.setProperty("width", "100%", "important");
             el.style.setProperty("clear", "both", "important");
-            
+
             Array.from(el.children).forEach((child, idx) => {
-              if (idx === 0 && (child.classList.contains("shrink-0") || child.offsetWidth < 30 || child.className.includes("w-1.5"))) {
+              if (
+                idx === 0 &&
+                (child.classList.contains("shrink-0") ||
+                  child.offsetWidth < 30 ||
+                  child.className.includes("w-1.5"))
+              ) {
                 child.style.setProperty("display", "block", "important");
                 child.style.setProperty("float", "left", "important");
                 child.style.setProperty("width", "12px", "important");
@@ -188,7 +201,11 @@ export default function WritePage({ params }) {
               } else {
                 child.style.setProperty("display", "block", "important");
                 child.style.setProperty("margin-left", "18px", "important");
-                child.style.setProperty("width", "calc(100% - 18px)", "important");
+                child.style.setProperty(
+                  "width",
+                  "calc(100% - 18px)",
+                  "important",
+                );
               }
             });
           }
@@ -658,7 +675,7 @@ export default function WritePage({ params }) {
                     <h2
                       className={`text-3xl font-black tracking-tight truncate ${resume.name ? "text-slate-900" : "text-slate-300"}`}
                     >
-                      {resume.name || "이름을 등록해 주세요"}
+                      {resume.name || "이름을 입력해 주세요"}
                     </h2>
 
                     {/* 연락처 및 링크 정보 */}
